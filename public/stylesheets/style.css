@@ -1,0 +1,92 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Ubuntu', sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  width: 100px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+
+/* BANNER BAR */
+
+.banner-bar {
+  margin-top: 60px;
+  width: 100%;
+  height: 80px;
+  background-image: url('../images/shop-banner.png');
+  background-position-y: 70%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+
+}
+
+
+/* NAV BAR */
+
+nav {
+  position: absolute;
+  height: 60px;
+  padding: 10px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+
+.navbar-collapse {
+  margin-top: 12px;
+  width: 100%;
+}
+
+
+/* INDEX */
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  margin-top: 60px;
+  position: fixed;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  color: white;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  margin: auto;
+}
+
+/* PRODUCT CONTENT */
+
+.product-content {
+  width: 100%;
+  height: fit-content;
+}
+

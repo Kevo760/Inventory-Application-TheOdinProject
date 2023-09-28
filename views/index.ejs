@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <%- include('./partials/navbar.ejs') %>
+    <video
+    autoPlay 
+      loop 
+      muted 
+      playsInline 
+      src='/images/bg.mp4'
+      id='vid-background'
+    >
+    </video>
+
+    <div class="content">
+      <h1>
+        Get ENRAGED to destroy your workout! Grab your favorite products here.
+      </h1>
+
+      <a href="/products">
+        <button type="button" class="btn btn-light">Shop Now</button>
+      </a>
+    </div>
+  </body>
+</html>
