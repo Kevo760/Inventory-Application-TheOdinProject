@@ -3,10 +3,25 @@
   <%- include('./partials/head.ejs') %>
   <body>
     <%- include('./partials/navbar.ejs') %>
+    <%- include('./partials/bannerbar.ejs') %>
+    
     <div class="product-content">
-        <div class="banner-bar">
-            <%= title %>
-        </div>
+        <% if (product_list !== 'undefined' && product_list.length > 0) { %>
+          <% product_list.forEach(product => { %>
+            <a href=<%= product.url %>>
+            <div class="card" style="width: 18rem;">
+              <img src="<%= product.imgurl %>" class="card-img-top" alt="<%= product.name %>">
+              <div class="card-body">
+                <p class="card-name"><%= product.name %></p>
+                <p class="category-name"><%= product.category.name %></p>
+                <p class="product-price">$<%= product.price %></p>
+              </div>
+            </div>
+            </a>
+          <% }) %>
+        <% } else { %>
+          <h1>There are no products.</h1>
+        <% } %>
     </div>
   </body>
 </html>

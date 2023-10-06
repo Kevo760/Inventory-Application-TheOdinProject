@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <%- include('./partials/navbar.ejs') %>
+    <%- include('./partials/bannerbar.ejs') %>
+    
+    <div class="category-content edit-category">
+      <% if (category_list !== 'undefined' && category_list.length > 0) { %>
+       <% category_list.forEach(category => { %>
+          <div class="category-banner">
+            <p><%= category.name %></p>
+            <div class="icon-box">
+              <i class="bi bi-trash"></i>
+              <i class="bi bi-pencil-square"></i>
+            </div>
+          </div>
+       <% }) %>
+      <% } else { %>
+        <h1>There are not categories.</h1>
+      <% } %>
+    </div>
+  </body>
+</html>

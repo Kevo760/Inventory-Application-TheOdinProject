@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <%- include('./partials/navbar.ejs') %>
+    <%- include('./partials/bannerbar.ejs') %>
+
+    <div class="product-content">
+        <div class="product-left-box">
+            <h2><%= product.name %> - <%= product.flavor %></h2>
+            <img
+                src="<%= product.imgurl %>"
+                alt="product image"
+            />
+        </div>
+        <div class="product-right-box">
+            <h2>$<%= product.price %></h2>
+            <div class="product-type-box">
+                <b>Product Type: </b>
+                <a href=<%= product.category.url %>>
+                    <p><%= product.category.name %></p>
+                </a>
+            </div>
+            <div class="flavor-box">
+                <b>FLAVOR</b>
+                <p class="flavor-name-text"><%= product.flavor %></p>
+            </div>
+            <div class="quantity-box">
+                <b>Quantity:</b>
+                <p><%= product.quantity %></p>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
