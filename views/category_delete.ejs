@@ -4,10 +4,13 @@
   <body>
     <%- include('./partials/navbar.ejs') %>
     <%- include('./partials/bannerbar.ejs') %>
+
+    <h3 class="category-delete-warning bg-dark">Please delete the products below before deleting this category</h3>
     
     <div class="category-content">
-      <% if (category_products !== 'undefined' && category_products.length > 0) { %>
-        <% category_products.forEach(product => { %>
+      <!-- If products in category are undefined and productsincategory length is more than 0, show the products -->
+      <% if (productsInCategory !== 'undefined' && productsInCategory.length > 0) { %>
+        <% productsInCategory.forEach(product => { %>
           <a href=<%= product.url %>>
           <div class="card" style="width: 18rem;">
             <img src="<%= product.imgurl %>" class="card-img-top" alt="<%= product.name %>">
@@ -20,7 +23,19 @@
           </a>
         <% }) %>
       <% } else { %>
-        <h1>There are no products.</h1>
+        
+        <form method="POST" action="">
+          <h2>Would you like to delete the <i><%= category.name %></i> category?</h2>
+          <div class="form-group">
+            <input class="form-control" 
+            id="categoryid" 
+            type="hidden" 
+            name="categoryid" 
+            required="true" 
+            value="<%= category._id %>"/>
+          </div>
+          <button class="delete-btn" type="submit">Delete</button>
+        </form>
       <% } %>
     </div>
   </body>

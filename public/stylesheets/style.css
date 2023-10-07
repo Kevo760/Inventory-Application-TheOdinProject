@@ -95,7 +95,7 @@ video {
   margin: auto;
 }
 
-
+/* ====================== PRODUCT ========================== */
 
 /* product_list */
 
@@ -115,7 +115,7 @@ video {
   cursor: pointer;
 }
 
-.product-content .card:hover {
+.card:hover {
   border-color: rgb(0, 168, 232);
 }
 
@@ -186,6 +186,35 @@ video {
   color: white;
 }
 
+/* product_form */
+.product-form {
+  margin-top: 80px;
+}
+
+.product-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 400px;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.product-form .form-group {
+  width: 100%;
+}
+
+.product-form button {
+  margin-top: 30px;
+  width: 100%;
+  border-radius: 4px;
+  padding: 6px;
+}
+
+/* ====================== CATEGORY ========================== */
 
 /* category_list */
 .category-content {
@@ -239,7 +268,6 @@ video {
   padding: 20px;
   border-radius: 4px;
   color: white;
-  background-color: rgba(0, 0, 0, 0.8);
   box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
 }
 
@@ -275,6 +303,14 @@ video {
 }
 
 .edit-category i {
-  scale: .8;
   cursor: pointer;
 }
+
+/* Delete category */
+.category-delete-warning {
+  text-align: center;
+  color: white;
+  padding: 10px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+

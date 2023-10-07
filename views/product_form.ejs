@@ -3,8 +3,118 @@
   <%- include('./partials/head.ejs') %>
   <body>
     <%- include('./partials/navbar.ejs') %>
-    <div class="product-content">
+    <div class="product-content product-form">
+      <!-- If allCategories exist and length is over zero show form -->
+      <% if (typeof allCategories !== 'undefined' && allCategories.length > 0) { %>
+        <form method="POST" action="" class="bg-dark">
+          <div class="form-group">
+            <label>Name:</label>
+            <input
+            class="form-control" 
+            id="name" 
+            type="text" 
+            placeholder="Product name" 
+            name="name" 
+            required="true"
+            autocomplete="off"
+            value="<%= typeof product === 'undefined' ? '' : product.name %>"
+            />
+          </div>
 
+          <div class="form-group">
+            <label for="flavor">Flavor:</label>
+            <input 
+            class="form-control" 
+            id="flavor" 
+            type="text" 
+            placeholder="Product flavor" 
+            name="flavor" 
+            required="true"
+            autocomplete="off"
+            value="<%= typeof product === 'undefined' ? '' : product.flavor %>"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category:</label>
+            <select class="form-control" 
+                id="category" 
+                type="select" 
+                placeholder="Select category" 
+                name="category" 
+                required="true"
+            >
+            <% allCategories.forEach(category => { %>
+                <option value="<%= category._id %>">
+                    <%= category.name %>
+                </option>
+            <% }) %>
+            </select>
+        </div>
+
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input 
+          class="form-control" 
+          id="quantity" 
+          type="number"
+          min="1"
+          max="100"
+          name="quantity" 
+          required="true"
+          autocomplete="off"
+          value="<%= typeof product === 'undefined' ? '' : product.quantity %>"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="quantity">Price:</label>
+          <input 
+          class="form-control" 
+          id="price" 
+          type="number"
+          min="1"
+          max="100"
+          name="price" 
+          required="true"
+          autocomplete="off"
+          value="<%= typeof product === 'undefined' ? '' : product.price %>"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="addimg">Add product image:</label>
+          <input 
+          class="form-control" 
+          id="addimg" 
+          type="file"
+          name="addimg" 
+          required="true"
+          />
+        </div>
+            
+
+
+          <button type="submit">Submit</button>
+
+          <% if(typeof errors != 'undefined') { %>
+              <ul>
+                  <% errors.forEach(err => { %>
+                   <li>
+                      <%= err.msg %>
+                   </li>
+                  <% }) %>
+              </ul>
+          <% } %>
+        </form>
+      <% } else { %>
+        <div class="add-category-warning">
+          <h2>Please add a category before adding product</h2>
+        </div>
+      <% } %>
+
+
+      
     </div>
   </body>
 </html>

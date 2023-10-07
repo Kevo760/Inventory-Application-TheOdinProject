@@ -11,8 +11,12 @@
           <div class="category-banner">
             <p><%= category.name %></p>
             <div class="icon-box">
-              <i class="bi bi-trash"></i>
-              <i class="bi bi-pencil-square"></i>
+              <a href=<%= category.url+'/delete' %>>
+                <i class="bi bi-trash"></i>
+              </a>
+              <a href=<%= category.url+'/update' %>>
+                <i class="bi bi-pencil-square"></i>
+              </a>
             </div>
           </div>
        <% }) %>

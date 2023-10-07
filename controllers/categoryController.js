@@ -1,7 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
-const Category = require('../models/category');
 const Product = require('../models/product');
+const Category = require('../models/category');
 
 exports.index = asyncHandler( async (req, res, next) => {
     const allCategories = await Category.find().sort({name: 1});
@@ -101,6 +101,7 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
   
     res.render("category_delete", {
       title: "Delete category",
+      banner_title: category.name,
       category: category,
       productsInCategory: productsInCategory,
     });
@@ -118,20 +119,21 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
         // category has books. Render in same way as for GET route.
         res.render("category_delete", {
           title: "Delete category",
+          banner_title: category.name,
           category: category,
           productsInCategory: productsInCategory,
         });
         return;
       } else {
         // Author has no books. Delete object and redirect to the list of authors.
-        await Category.findByIdAndRemove(req.body.categoryid);
+        await category.findByIdAndRemove(req.body.categoryid);
         res.redirect("/categories");
       }
   });
 
   // Display category update form on GET.
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-    const category = await category.findById(req.params.id);
+    const category = await Category.findById(req.params.id);
   
     res.render("category_form", {
       title: "Update category",
@@ -153,7 +155,7 @@ exports.category_update_get = asyncHandler(async (req, res, next) => {
       const errors = validationResult(req);
   
       // Create a category object with escaped and trimmed data.
-      const category = new category({ 
+      const category = new Category({ 
         name: req.body.name,
         _id: req.params.id, // This is required, or a new ID will be assigned!
       });
@@ -169,12 +171,12 @@ exports.category_update_get = asyncHandler(async (req, res, next) => {
       } else {
         // Data from form is valid.
         // Check if category with same name already exists.
-        const categoryExists = await category.findOne({ name: req.body.name });
+        const categoryExists = await Category.findOne({ name: req.body.name });
         if (categoryExists) {
           // category exists, redirect to its detail page.
           res.redirect(categoryExists.url);
         } else {
-          const updatedcategory = await category.findByIdAndUpdate(req.params.id, category);
+          const updatedcategory = await Category.findByIdAndUpdate(req.params.id, category);
           //Updated category saved. Redirect to category detail page.
           res.redirect(updatedcategory.url);
         }

@@ -6,20 +6,36 @@ const category_controller = require('../controllers/categoryController');
 
 /// Category Routes
 
-// Gets request to create a category
+
+
+// GET request to create a category
 router.get('/add', category_controller.category_create_get);
 
-// Post request for creating category
+// POST request for creating category
 router.post('/add', category_controller.category_create_post);
 
-// Gets all products in category to edit
+// GET request to delete category
+router.get("/:id/delete", category_controller.category_delete_get);
+
+// POST request to delete category
+router.post("/:id/delete", category_controller.category_delete_post);
+
+// GET update on category
+router.get('/:id/update', category_controller.category_update_get);
+
+// POST update on category
+router.post('/:id/update', category_controller.category_update_post);
+
+// GET all products in category to edit
 router.get('/edit', category_controller.category_edit_list);
 
-// Get all products in category
+// GET all products in category
 router.get('/:id', category_controller.category_detail);
 
-// Gets category list
+// GET category list
 router.get('/', category_controller.index);
+
+
 
 module.exports = router;
 
