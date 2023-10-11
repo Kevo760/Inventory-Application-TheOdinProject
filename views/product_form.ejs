@@ -6,7 +6,30 @@
     <div class="product-content product-form">
       <!-- If allCategories exist and length is over zero show form -->
       <% if (typeof allCategories !== 'undefined' && allCategories.length > 0) { %>
-        <form method="POST" action="" class="bg-dark">
+        <!-- If addInputImg is true add multipart form data so image can upload properly -->
+        <form 
+        method="POST" 
+        action="" 
+        class="bg-dark"
+        <% if (addInputImg) { %>
+          enctype='multipart/form-data'
+        <% } %>
+        >
+
+          <% if (addInputImg === false && product.imgurl) { %>
+           <div class="img-box">
+            <img src="<%= product.imgurl %>" alt="product image"/>
+            <input
+            class="form-control" 
+            id="imgurl" 
+            type="text" 
+            name="imgurl" 
+            value="<%= typeof product === 'undefined' ? '' : product.imgurl %>"
+            type="hidden"
+            />
+           </div>
+          <% } %>
+
           <div class="form-group">
             <label>Name:</label>
             <input
@@ -75,25 +98,28 @@
           type="number"
           min="1"
           max="100"
-          name="price" 
+          name="price"
+          step=".01"
           required="true"
           autocomplete="off"
           value="<%= typeof product === 'undefined' ? '' : product.price %>"
           />
         </div>
 
-        <div class="form-group">
-          <label for="addimg">Add product image:</label>
-          <input 
-          class="form-control" 
-          id="addimg" 
-          type="file"
-          name="addimg" 
-          required="true"
-          />
-        </div>
-            
-
+        <% if (addInputImg) { %>
+          <div class="form-group">
+            <label for="image">Add product image:</label>
+            <input 
+            class="form-control" 
+            id="image" 
+            type="file"
+            name="image" 
+            required="true"
+            accept="image/png, image/jpeg"
+            multiple="false"
+            />
+          </div>
+        <% } %>
 
           <button type="submit">Submit</button>
 

@@ -101,22 +101,19 @@ video {
 
 .product-content {
   width: 100%;
-  height: fit-content;
+  height: 100%;
   padding: 20px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  background-color: rgb(233, 236, 239);
 }
 
 .product-content .card {
   text-align: center;
   cursor: pointer;
-}
-
-.card:hover {
-  border-color: rgb(0, 168, 232);
 }
 
 .card-name {
@@ -145,6 +142,18 @@ video {
 
 
 /* PRODUCT DETAIL */
+.product-mainbox {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  height: fit-content;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+}
+
+
 .product-left-box {
   margin-left: 0;
   text-align: center;
@@ -188,7 +197,8 @@ video {
 
 /* product_form */
 .product-form {
-  margin-top: 80px;
+  padding-top: 80px;
+  height: 100%;  
 }
 
 .product-form form {
@@ -198,6 +208,7 @@ video {
   justify-content: center;
   gap: 10px;
   width: 400px;
+  height: fit-content;
   color: white;
   padding: 20px;
   border-radius: 10px;
@@ -214,6 +225,48 @@ video {
   padding: 6px;
 }
 
+.img-box {
+  height: 200px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.img-box img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+/* product edit */
+.edit-list button {
+  border: none;
+  border-radius: 4px;
+}
+
+.edit-list button:hover {
+  background-color: rgb(173, 181, 189);
+}
+
+.card-btn-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* product delete */
+
+
+.product-delete-box button {
+  border: none;
+  padding: 0 10px;
+}
+
+.product-delete-box button:hover {
+  background-color: rgb(173, 181, 189);
+}
+
 /* ====================== CATEGORY ========================== */
 
 /* category_list */
@@ -226,6 +279,8 @@ video {
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  background-color: rgb(233, 236, 239);
+  height: 100%;
 }
 
 
@@ -253,6 +308,19 @@ video {
   width: fit-content;
   padding: 0 10px;
   border-radius: 2px;
+}
+
+.category-content a {
+  height: fit-content;
+}
+
+.category-banner-box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  height: fit-content;
 }
 
 /* Category form */
@@ -310,7 +378,27 @@ video {
 .category-delete-warning {
   text-align: center;
   color: white;
+  height: 50px;
   padding: 10px;
+  border-radius: 4px;
   box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
 }
 
+.category-content-subbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.category-content-subbox h3 {
+  height: fit-content;
+}
+
+.all-products-delete-box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}

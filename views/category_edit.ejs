@@ -6,23 +6,25 @@
     <%- include('./partials/bannerbar.ejs') %>
     
     <div class="category-content edit-category">
-      <% if (category_list !== 'undefined' && category_list.length > 0) { %>
-       <% category_list.forEach(category => { %>
-          <div class="category-banner">
-            <p><%= category.name %></p>
-            <div class="icon-box">
-              <a href=<%= category.url+'/delete' %>>
-                <i class="bi bi-trash"></i>
-              </a>
-              <a href=<%= category.url+'/update' %>>
-                <i class="bi bi-pencil-square"></i>
-              </a>
-            </div>
-          </div>
-       <% }) %>
-      <% } else { %>
-        <h1>There are not categories.</h1>
-      <% } %>
+        <div class="category-banner-box">
+          <% if (category_list !== 'undefined' && category_list.length > 0) { %>
+          <% category_list.forEach(category => { %>
+              <div class="category-banner">
+                <p><%= category.name %></p>
+                <div class="icon-box">
+                  <a href=<%= category.url+'/delete' %>>
+                    <i class="bi bi-trash"></i>
+                  </a>
+                  <a href=<%= category.url+'/update' %>>
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+                </div>
+              </div>
+          <% }) %>
+          <% } else { %>
+            <h1>There are not categories.</h1>
+          <% } %>
+      </div>
     </div>
   </body>
 </html>

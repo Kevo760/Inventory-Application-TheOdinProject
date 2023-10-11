@@ -3,9 +3,22 @@ const asyncHandler = require("express-async-handler");
 const Category = require('../models/category');
 const Product = require('../models/product');
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require( "firebase/storage");
-const initializeApp = require("firebase/app");
-const firebaseConfig = require('../config/firebase.config');
+const {initializeApp} = require("firebase/app");
+const app = require('../config/firebase.config');
 const multer = require('multer');
+
+
+const giveCurrentDateTime = () => {
+  const today = new Date();
+  const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  const dateTime = date + ' ' + time;
+  return dateTime;
+}
+// Created upload variable with multer memory storage
+const upload = multer({storage: multer.memoryStorage()});
+// Initialize firebase
+initializeApp(app);
 
 
 
@@ -40,13 +53,15 @@ exports.product_detail = asyncHandler(async (req, res, next) => {
 
     res.render('product_form', {
         title: 'Add product',
-        allCategories: allCategories
+        allCategories: allCategories,
+        addInputImg: true
     });
   });
 
 exports.product_create_post = [
+  upload.single('image'),
 // Validate and sanitize the name field.
-  body("name", "category name must contain at least 3 characters")
+  body("name", "product name must contain at least 2 characters")
   .trim()
   .isLength({ min: 2 })
   .escape(),
@@ -58,103 +73,123 @@ asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
 
   // Create a category object with escaped and trimmed data.
-  const category = new Category({ name: req.body.name });
+  const product = new Product(
+    { 
+      name: req.body.name,
+      flavor: req.body.flavor,
+      category: req.body.category,
+      quantity: req.body.quantity,
+      price: req.body.price,
+    });
 
   if (!errors.isEmpty()) {
     // There are errors. Render the form again with sanitized values/error messages.
     res.render("product_form", {
-      title: "Create product",
+      title: "Add product",
       product: product,
       errors: errors.array(),
+      addInputImg: true
     });
     return;
   } else {
     // Data from form is valid.
     // Check if category with same name already exists.
-    const categoryExists = await Category.findOne({ name: req.body.name }).exec();
-    if (categoryExists) {
+    const productExists = await Product.findOne({ name: req.body.name });
+    if (productExists) {
       // Category exists, redirect to its detail page.
-      res.redirect(categoryExists.url);
+      res.redirect(productExists.url);
     } else {
-      await category.save();
-      // New category saved. Redirect to category detail page.
-      res.redirect(category.url);
+      // Upload image file and get url
+      try {
+        const dateTime = giveCurrentDateTime();
+
+        const storage = getStorage();
+        const storageRef = ref(storage, req.file.originalname + dateTime);
+
+        // Create file metadata including the content type
+        const metadata = {
+          contentType: req.file.mimetype,
+      };
+
+        // Upload the file in the bucket storage
+        const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+        //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+        // Grab the public url
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        // Pass downloadURL to imgurl on product
+        product.imgurl = downloadURL
+        // Save product
+        await product.save();
+        // New category saved. Redirect to category detail page.
+        res.redirect(product.url);
+      } catch(error) {
+        // If error occurs input 404 error
+        const err = new Error(error);
+        err.status = 404;
+        return next(err);
+      }
     }
   }
 }),
 ]
 
-// Display list category to edit
-exports.category_edit_list = asyncHandler( async (req, res, next) => {
-  const allCategories = await Category.find().sort({name: 1});
+// Display list product to edit
+exports.product_edit_list = asyncHandler( async (req, res, next) => {
+  // Find products where quantity is greater than zero and sort by name
+  const allProducts = await Product.find().where('quantity').gt(0).sort({name: 1}).populate('category');
 
-    res.render('category_edit', {
-        title: 'Category',
-        banner_title: 'Category',
-        category_list: allCategories,
-    });
+  res.render('product_edit', { title: 'Products', banner_title: 'Edit Products', product_list: allProducts })
 });
 
-// Display category delete form on GET.
-exports.category_delete_get = asyncHandler(async (req, res, next) => {
-    // Get details of category and all their products (in parallel)
-    const [category, productsInCategory] = await Promise.all([
-      Category.findById(req.params.id),
-      Product.find({ category: req.params.id }),
-    ]);
-    if (category === null) {
+// Display product delete page on GET.
+exports.product_delete_get = asyncHandler(async (req, res, next) => {
+  // Gets product by id with category
+  const product = await Product.findById(req.params.id).populate('category');
+
+  if(product === null) {
       // No results.
-      res.redirect("/categories");
-    }
+      const err = new Error("product not found");
+      err.status = 404;
+      return next(err);
+  };
   
-    res.render("category_delete", {
-      title: "Delete category",
-      banner_title: category.name,
-      category: category,
-      productsInCategory: productsInCategory,
+    res.render("product_delete", {
+      title: "Delete product",
+      banner_title: product.name,
+      product: product,
     });
   });
   
-  // Handle category delete on POST.
-  exports.category_delete_post = asyncHandler(async (req, res, next) => {
-    // Get details of category and all their products (in parallel)
-    const [category, productsInCategory] = await Promise.all([
-        Category.findById(req.params.id),
-        Product.find({ category: req.params.id }),
-      ]);
-    
-      if (productsInCategory.length > 0) {
-        // category has books. Render in same way as for GET route.
-        res.render("category_delete", {
-          title: "Delete category",
-          banner_title: category.name,
-          category: category,
-          productsInCategory: productsInCategory,
-        });
-        return;
-      } else {
-        // Author has no books. Delete object and redirect to the list of authors.
-        await category.findByIdAndRemove(req.body.categoryid);
-        res.redirect("/categories");
-      }
+  // Handle product delete on POST.
+  exports.product_delete_post = asyncHandler(async (req, res, next) => {
+    // find product by id and remove
+    await Product.findByIdAndRemove(req.body.productid);
+    res.redirect("/products");
   });
 
-  // Display category update form on GET.
-exports.category_update_get = asyncHandler(async (req, res, next) => {
-    const category = await Category.findById(req.params.id);
+  // Display product update form on GET.
+exports.product_update_get = asyncHandler(async (req, res, next) => {
+    const [product, allCategories] = await Promise.all([
+      Product.findById(req.params.id).populate('category'),
+      Category.find().sort({name: 1})
+    ]) 
   
-    res.render("category_form", {
-      title: "Update category",
-      category: category,
+    res.render("product_form", {
+      title: "Update product",
+      product: product,
+      allCategories: allCategories,
+      addInputImg: false
     });
   });
   
-  // Handle category update on POST.
-  exports.category_update_post = [
+  // Handle product update on POST.
+  exports.product_update_post = [
       // Validate and sanitize the name field.
-      body("name", "category name must contain at least 3 characters")
+      body("name", "product name must contain at least 2 characters")
       .trim()
-      .isLength({ min: 3 })
+      .isLength({ min: 2 })
       .escape(),
   
     // Process request after validation and sanitization.
@@ -162,32 +197,46 @@ exports.category_update_get = asyncHandler(async (req, res, next) => {
       // Extract the validation errors from a request.
       const errors = validationResult(req);
   
-      // Create a category object with escaped and trimmed data.
-      const category = new Category({ 
-        name: req.body.name,
+      // Create a product object with escaped and trimmed data.
+      const product = new Product({ 
         _id: req.params.id, // This is required, or a new ID will be assigned!
+        name: req.body.name,
+        flavor: req.body.flavor,
+        category: req.body.category,
+        quantity: req.body.quantity,
+        price: req.body.price,
+        imgurl: req.body.imgurl
       });
-  
+
       if (!errors.isEmpty()) {
+        const allCategories = await Category.find().sort({name: 1});
+        console.log(product)
+
         // There are errors. Render the form again with sanitized values/error messages.
-        res.render("category_form", {
-          title: "Create category",
-          category: category,
-          errors: errors.array(),
+        res.render("product_form", {
+        title: "Update product",
+        product: product,
+        allCategories: allCategories,
+        addInputImg: false,
+        errors: errors.array()
         });
         return;
       } else {
-        // Data from form is valid.
-        // Check if category with same name already exists.
-        const categoryExists = await Category.findOne({ name: req.body.name });
-        if (categoryExists) {
-          // category exists, redirect to its detail page.
-          res.redirect(categoryExists.url);
-        } else {
-          const updatedcategory = await Category.findByIdAndUpdate(req.params.id, category);
-          //Updated category saved. Redirect to category detail page.
-          res.redirect(updatedcategory.url);
-        }
+          const updatedProduct = await Product.updateOne(
+            {_id:req.params.id},
+            {
+              $set:
+              {
+                name: req.body.name,
+                flavor: req.body.flavor,
+                category: req.body.category,
+                quantity: req.body.quantity,
+                price: req.body.price,
+              }
+            }
+          )
+          //Updated product saved. Redirect to product detail page.
+          res.redirect(product.url);
       }
     }),
   ]

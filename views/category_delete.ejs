@@ -5,38 +5,43 @@
     <%- include('./partials/navbar.ejs') %>
     <%- include('./partials/bannerbar.ejs') %>
 
-    <h3 class="category-delete-warning bg-dark">Please delete the products below before deleting this category</h3>
+    
     
     <div class="category-content">
-      <!-- If products in category are undefined and productsincategory length is more than 0, show the products -->
-      <% if (productsInCategory !== 'undefined' && productsInCategory.length > 0) { %>
-        <% productsInCategory.forEach(product => { %>
-          <a href=<%= product.url %>>
-          <div class="card" style="width: 18rem;">
-            <img src="<%= product.imgurl %>" class="card-img-top" alt="<%= product.name %>">
-            <div class="card-body">
-              <p class="card-name"><%= product.name %></p>
-              <p class="category-name"><%= product.category.name %></p>
-              <p class="product-price">$<%= product.price %></p>
+      <div class="category-content-subbox">
+        <!-- If products in category are undefined and productsincategory length is more than 0, show the products -->
+        <% if (productsInCategory !== 'undefined' && productsInCategory.length > 0) { %>
+          <h3 class="category-delete-warning bg-dark">Please delete the products below before deleting this category</h3>
+          <div class="all-products-delete-box">
+            <% productsInCategory.forEach(product => { %>
+              <a href=<%= product.url %>>
+              <div class="card" style="width: 18rem; padding: 16px;">
+                <img src="<%= product.imgurl %>" class="card-img-top" alt="<%= product.name %>">
+                <div class="card-body">
+                  <p class="card-name"><%= product.name %></p>
+                  <p class="category-name"><%= product.category.name %></p>
+                  <p class="product-price">$<%= product.price %></p>
+                </div>
+              </div>
+              </a>
+            <% }) %>
+          </div>  
+        <% } else { %>
+          
+          <form class="bg-dark" method="POST" action="">
+            <h2>Would you like to delete the <i><%= category.name %></i> category?</h2>
+            <div class="form-group">
+              <input class="form-control" 
+              id="categoryid" 
+              type="hidden" 
+              name="categoryid" 
+              required="true" 
+              value="<%= category._id %>"/>
             </div>
-          </div>
-          </a>
-        <% }) %>
-      <% } else { %>
-        
-        <form method="POST" action="">
-          <h2>Would you like to delete the <i><%= category.name %></i> category?</h2>
-          <div class="form-group">
-            <input class="form-control" 
-            id="categoryid" 
-            type="hidden" 
-            name="categoryid" 
-            required="true" 
-            value="<%= category._id %>"/>
-          </div>
-          <button class="delete-btn" type="submit">Delete</button>
-        </form>
-      <% } %>
+            <button class="delete-btn" type="submit">Delete</button>
+          </form>
+        <% } %>
+      </div>
     </div>
   </body>
 </html>

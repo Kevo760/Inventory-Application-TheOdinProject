@@ -10,8 +10,6 @@ var indexRouter = require('./routes/index');
 const productRouter = require('./routes/products');
 const categoryRouter = require('./routes/categories');
 
-const testRouter = require('./routes/test');
-
 var app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -43,7 +41,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/products', productRouter);
 app.use('/categories', categoryRouter);
-app.use('/test', testRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

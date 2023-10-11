@@ -82,7 +82,7 @@ exports.category_edit_list = asyncHandler( async (req, res, next) => {
 
     res.render('category_edit', {
         title: 'Category',
-        banner_title: 'Category',
+        banner_title: 'Edit Categories',
         category_list: allCategories,
     });
 });
@@ -116,7 +116,7 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
       ]);
     
       if (productsInCategory.length > 0) {
-        // category has books. Render in same way as for GET route.
+        // category has products. Render in same way as for GET route.
         res.render("category_delete", {
           title: "Delete category",
           banner_title: category.name,
@@ -125,8 +125,8 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
         });
         return;
       } else {
-        // Author has no books. Delete object and redirect to the list of authors.
-        await category.findByIdAndRemove(req.body.categoryid);
+        // category has no products. Delete object and redirect to the list of authors.
+        await Category.findByIdAndRemove(req.body.categoryid);
         res.redirect("/categories");
       }
   });
